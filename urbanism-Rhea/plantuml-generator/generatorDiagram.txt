@@ -1,0 +1,40 @@
+@startuml
+abstract class GeneralMesh {
+    +int WIDTH
+    +int HEIGHT
+    +DecimalFormat precision
+}
+Vertex "1..* \n +vertices \n +centroidList \n +vertexList" <--  GeneralMesh
+
+Polygon "1..* \n +polygonList" <--  GeneralMesh
+
+Segment "1..* \n +segments \n +segmentList \n +neighbourConnectionList" <-- GeneralMesh
+
+
+class MeshGen {
+    +int SQUARE_SIZE
+    +Set<Integer> neighboursList
+
+    +void makeVertex()
+    +void makePolygon(int v1Id,int v2Id,int v3Id,int v4Id)
+    +Mesh generate(String Mode)
+    -void colorVertex(Vertex vertex, int red, int green, int blue, int alpha)
+    -void colorSegment(Segment seg, int red, int green, int blue, int alpha)
+    -Color extractColor(List<Property> properties)
+}
+
+class Vertex {
+
+}
+class Segment {
+
+}
+
+class Polygon {
+
+}
+GeneralMesh <|-- MeshGen
+@enduml
+
+To run the plant thing do this:
+java -jar plantuml.jar generatorDiagram.txt

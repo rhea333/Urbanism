@@ -1,0 +1,28 @@
+@startuml
+class GraphicRenderer {
+    -int THICKNESS
+    +void render(Mesh aMesh, Graphics2D canvas)
+    -void renderSegments(Mesh aMesh, Graphics2D canvas, String debug)
+    -void renderVertices(Mesh aMesh, Graphics2D canvas, String debug, boolean isIrreg)
+    -Color extractColor(List<Property> properties)
+
+}
+class Main {
+    + void main(String[] args)
+}
+class MeshDump {
+    + void dump(String fileName)
+    + void dump(Mesh aMesh)
+}
+class SVGCanvas{
+    + Graphics2D build(int width, int height)
+    + void write(Graphics2D g, String fileName)
+}
+GraphicRenderer <--* Main
+MeshDump <--* Main
+SVGCanvas <--* Main
+
+@enduml
+
+To run the plant thing do this:
+java -jar plantuml.jar visualizerDiagram.txt

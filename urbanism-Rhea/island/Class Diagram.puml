@@ -1,0 +1,195 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+abstract class IslandSeed
+class IslandGen
+class Aquifers
+class Biomes
+class IslandShapes
+class Lake
+class Rivers
+class Elevation
+class Main
+class Heatmaps
+interface IslandColour
+
+IslandGen "1" o-- "1" IslandShapes:_'has'
+IslandGen "1" o-- "0..*" Aquifers:_'has'
+IslandGen "1" o-- "1..*" Biomes:_'has'
+IslandGen "1" o-- "0..*" Lake:_'has a'
+IslandGen "1" o-- "0..1" Rivers:_'has'
+IslandGen "1" o-- "1" Elevation:_'has an'
+IslandGen "1" o-- "1" Heatmaps:_'has'
+IslandSeed <|-- IslandGen:_'extends'
+IslandColour <|.. IslandGen:_'implements'
+Main --> IslandGen:_'uses'
+
+class IslandGen {
+    ~List<Polygon> polygonList;
+    ~List<Segment> segmentList;
+    ~List<Vertex> vertexList;
+    ~List<Double> elevations;
+    ~List<Double> humidity;
+    ~List<Double> vertexHeights;
+    ~List<Double> soil;
+    ~List <Integer> lakeIdxs
+    ~String islandColor
+    ~List<Integer> islandBlocks
+    ~List<Integer> heightPoints
+    ~List<Integer> islandVertices
+    ~DecimalFormat precision
+    ~double soilPercent
+    -void soilProfile()
+    -void seedDecoder()
+    -void getIslandShape()
+    -void getElevationType()
+    -void getElevationStartIdx()
+    -void getLakeNum()
+    -void getLakeStartIdx()
+    -void getRiverNum()
+    -void getRiverStartIdx()
+    -void getAquiferNum()
+    -void getAquiferStartIdx()
+    -void getSoil()
+    -void defaultValues()
+    +Mesh generate()
+    -void getIslandBlocks()
+    -List extractVertices()
+    -void generateInnerIsland()
+    -String extractColorString()
+}
+
+class Aquifers{
+    ~List<Structs.Polygon> polygonList
+    ~List<Integer> heightPoints
+    ~List<Double> humidity
+    ~int aquaStartIdx
+    ~int aquaNum
+    ~double soilPercent
+    ~DecimalFormat precision
+    +void generate()
+    -void createAquifers()
+    -void addAquaHumidity()
+}
+
+class Biomes{
+    ~List<Double> elevations
+    ~List<Double> humidities
+    ~List<Structs.Polygon> polygonList
+    ~List<Integer> IslandBlocks
+    ~List<Integer> LakeIdxs
+    ~int biome
+    +HashMap<Integer, String> biomeMap
+    +void generate()
+    +String numToBiome()
+    +double BiomeElevation()
+    +double BiomeHumidity()
+    -void BiomeType()
+}
+
+class Elevation{
+    ~int altStartIdx
+    ~List<Integer> heightPoints
+    ~List<Structs.Polygon> polygonList
+    ~List<Double> elevations
+    ~List<Integer> islandBlocks
+    ~int altType
+    ~DecimalFormat precision
+    +void generate()
+    -void selectElevation()
+    -void generateHills()
+    -void volcano()
+}
+
+class IslandShapes{
+    ~Structs.Mesh aMesh
+    ~List<Structs.Polygon> polygonList
+    ~List<Structs.Vertex> vertexList
+    +public islandSelector()
+    -void circleIsland()
+    -void crossIsland()
+    -double inOval()
+    -void moonIsland()
+    -void ovalIsland()
+}
+
+class Lake{
+    ~int lakeNum
+    ~int maxLakes
+    ~List<Double> humidity
+    ~List<Integer> heightPoints
+    ~List<Integer> lakeIdxs
+    ~boolean isSeed
+    ~List<Structs.Polygon> polygonList
+    ~List<Integer> islandBlocks
+    ~DecimalFormat precision
+    ~double soil
+    +void generateLakes()
+    +void createLakes()
+    -void lakeSizes()
+    -void addLakeHumidity()
+}
+
+class Rivers{
+    ~List<Integer> islandBlocks
+    ~List<Integer> islandVertices
+    ~List<Double> vertexHeights
+    ~List<Double> elevations
+    ~List<Structs.Polygon> polygonList
+    ~List<Structs.Segment> segmentList
+    ~List<Structs.Vertex> vertexList
+    ~List<Double> humidity
+    ~int riverNum
+    ~int riverStartIdx
+    ~double soil
+    ~List<List<Integer>> VTVRelations;
+    ~List<List<Integer>> VTSRelations;
+    ~List<List<Integer>> VTPRelations;
+    +void generate()
+    -void generateVertexHeights()
+    -void getVTVRelation()
+    -void riverFlow()
+    -void increaseThickness()
+    -Double extractThickness()
+    -void colorSegment()
+    -void generateVTPRelation()
+    -void List<Integer> extractVertices()
+    -void colorVertex()
+    -String extractColorString()
+}
+
+class Heatmaps{
+    ~List<Structs.Polygon> polygonList
+    ~List<Double> humidity
+    ~List<Double> elevations
+    ~List<Integer> islandBlocks
+    +void selectMap()
+    -void elevationMap()
+    -void moistureMap()
+}
+interface IslandColour{
+    +void colorPolygon()
+}
+
+abstract class IslandSeed{
+    ~int islandShape
+    ~int altType
+    ~int altStartIdx
+    ~boolean isSeed
+    ~int maxLakes
+    ~int lakeNum
+    ~int lakeStartIdx
+    ~int riverNum
+    ~int riverStartIdx
+    ~int aquaNum
+    ~int aquaStartIdx
+    ~int soilMoisture
+    ~int biome
+    ~double defaultBlockElev
+    ~double defaultHumidity
+}
+
+class Main{
+    +void main()
+}
+@enduml

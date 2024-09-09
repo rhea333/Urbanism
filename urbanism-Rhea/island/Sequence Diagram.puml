@@ -1,0 +1,83 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant Main
+participant IslandGen
+
+Main -> IslandGen:generate(Mesh aMesh, String seed, String shape, String elevType, String elevationStartIdx, String maxNumLakes, String lakeStartIdx, String rivers, String riverStartIdx, String aquifers, String aquiferStartIdx, String soil, String biome)
+activate Main
+activate IslandGen
+
+
+IslandGen -> IslandGen: Check if Seed Inputted
+alt Seed Inputted
+    IslandGen -> IslandGen: seedDecoder()
+    Create Biomes
+    IslandGen -> Biomes: numToBiome(int biome)
+    Biomes --> IslandGen: numToBiome(String val)
+    IslandGen -> Biomes: BiomeElevation(String val)
+    Biomes --> IslandGen: BiomeElevation(double defaultBlockElev)
+    IslandGen -> Biomes: BiomeHumidity(String val)
+    Biomes --> IslandGen: BiomeHumidity(double defaultHumidity)
+    IslandGen -> IslandGen: defaultValues(Mesh aMesh)
+    Create IslandShapes
+    IslandGen -> IslandShapes: islandSelector(int islandShape, Mesh aMesh, List<Vertex> vertexList, List<Polygon> polygonList)
+    IslandShapes --> IslandGen: islandSelector(void)
+    IslandGen -> IslandGen: getIslandBlocks()
+    IslandGen -> IslandGen: getElevationStartIdx(String altStartIdx)
+    IslandGen -> IslandGen: getLakeStartIdx(String lakeStartIdx)
+    IslandGen -> IslandGen: getLakeNum(String maxLakes)
+    IslandGen -> IslandGen: getRiverNum(String riverNum)
+    IslandGen -> IslandGen: getRiverStartIdx(String riverStartIdx)
+    IslandGen -> IslandGen: getAquiferNum(String aquaNum)
+    IslandGen -> IslandGen: getAquiferStartIdx(String aquaStartIdx)
+
+else Seed not Inputted
+    IslandGen -> Biomes: BiomeElevation(String biomeSelect)
+    Biomes --> IslandGen: BiomeElevation(double defaultBlockElev)
+    IslandGen -> Biomes: BiomeHumidity(String biomeSelect)
+    Biomes --> IslandGen: BiomeHumidity(double defaultHumidity)
+    IslandGen -> IslandGen: defaultValues(Mesh aMesh)
+    IslandGen -> IslandGen: getIslandShape(String shape)
+    IslandGen -> IslandShapes: islandSelector(int islandShape, Mesh aMesh, List<Vertex> vertexList, List<Polygon> polygonList)
+    IslandShapes --> IslandGen: islandSelector(void)
+    IslandGen -> IslandGen: getIslandBlocks()
+    IslandGen -> IslandGen: getElevationStartIdx( String elevationStartIdx)
+    IslandGen -> IslandGen: getElevationType(String elevType)
+    IslandGen -> IslandGen: getLakeStartIdx(String lakeStartingIdx)
+    IslandGen -> IslandGen: getLakeNum(String maxNumLakes)
+    IslandGen -> IslandGen: getRiverNum(String rivers)
+    IslandGen -> IslandGen: getRiverStartIdx(String riverStartingIdx)
+    IslandGen -> IslandGen: getAquiferNum(String aquifers)
+    IslandGen -> IslandGen: getAquiferStartIdx(String aquiferStartingIdx)
+    IslandGen -> IslandGen: getAquiferStartIdx(String soilSelect)
+
+end alt
+
+Create Elevation
+IslandGen -> Elevation: generate(int altType, List<Double> elevations, int altStartIdx, List<Integer> heightPoints, List<Polygon> polygonList, List<Integer> islandBlocks)
+Elevation --> IslandGen: generate(void)
+
+Create Lake
+IslandGen -> Lake: generate(double soilPercent, List<Integer> islandBlocks, boolean isSeed, int maxLakes, int lakeStartIdx, int lakeNum, List<Double> humidity, List<Integer> heightPoints, List<Polygon> polygonList)
+Lake --> IslandGen: generate(void)
+
+Create Rivers
+IslandGen -> Rivers: generate(double soilPercent, int riverNum, int riverStartIdx, List<Polygon> polygonList, List<Segment> segmentList, List<Vertex> vertexList, List<Double> elevations, List<Double> vertexHeights, List<Integer> islandVertices, List<Integer> islandBlocks, List<Double> humidity)
+Rivers --> IslandGen: generate(void)
+
+IslandGen -> Biomes: generate(List<Double> elevations, List<Integer> islandBlocks, List<Integer> lakeIdxs, List<Double> humidity, List<Polygon> polygonList)
+Biomes --> IslandGen: generate(void)
+
+Create Aquifers
+IslandGen -> Aquifers: generate(List<Integer> heightPoints, int aquaStartIdx, List<Polygon> polygonList, List<Double> humidity, double soilPercent, int aquaNum)
+Aquifers --> IslandGen: generate(void)
+
+Create Heatmaps
+IslandGen -> Heatmaps: selectMap(List<Polygon> polygonList, List<Double> humidity, List<Double> elevations, List<Integer> islandBlocks, String map)
+Heatmaps --> IslandGen: selectMap(void)
+
+IslandGen --> Main: generate(Mesh Mesh.newBuilder().addAllVertices(vertexList).addAllSegments(segmentList).addAllPolygons(polygonList).build())
+@enduml

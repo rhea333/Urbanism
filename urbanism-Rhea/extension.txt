@@ -1,0 +1,6 @@
+# Extension
+Created Documentation for the methods
+Altered Relaxation Mode
+Respected more Single Responsibility (SOLID) principles
+Encapsulated methods to protect from mutation
+Made user input Interfaces more user-friendly
